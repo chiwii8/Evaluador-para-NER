@@ -47,9 +47,6 @@ class Evaluator:
         }
         self.results = None
 
-    def evaluated(self, test_path: str, input_path: str, betta_value: float) -> None:
-        raise NotImplementedError('Esta clase no implenta este método')
-
     def calculated_confusion_matrix(self):
         raise NotImplementedError('Está clase no implementa esté método')
 
@@ -119,3 +116,42 @@ class EvaluatorLabelled(Evaluator):
         super().__init__()
         self.valid_file = None
         self.fail_file = None
+
+    def evaluated(self, valid_path:str, fail_path:str, betta_value:float) ->None:
+        print(f'Start the evaluation of the files.')
+
+        self.valid_file = open_file_labelled(valid_path)
+        self.fail_file = open_file_labelled(fail_path)
+
+        # Calculated the confusion_matrix values
+        self.calculated_confusion_matrix()
+
+        # Once calculated the confusion matrix values, we can start calculating the precision, recall and f-measure
+        precision = self.calculated_precision()
+        recall = self.calculated_recall()
+
+        f_measure = calculated_f(betta=betta_value, precision=precision, recall=recall)
+
+        self.results = f"""Results of the evaluation
+                        Precision:`{precision}`
+                        Recall: `{recall}`
+                        F_measure `{f_measure}`"""
+
+        print(self.results)
+
+    def calculated_confusion_matrix(self,base_tag='0'):
+        print('Calculated the confusion matrix')
+
+        for ner_tags in self.valid_file['ner_tags']:
+            try:
+                index = ner_tags.index(base_tag)
+                self.confusion_matrix['False_Positive'] += 1
+            except ValueError:
+                self.confusion_matrix['True_Positive'] += 1
+
+        for ner_tags in self.fail_file['ner_tags']:
+            try:
+                index = ner_tags.index(base_tag)
+                self.confusion_matrix['False_Negative'] += 1
+            except ValueError:
+                self.confusion_matrix['True_Negative'] += 1
