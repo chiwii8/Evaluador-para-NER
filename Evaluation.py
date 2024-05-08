@@ -45,45 +45,13 @@ class Evaluator:
             "False_Positive": 0,  # No relevantes recuperados
             "False_Negative": 0  # No relevantes no recuperado
         }
-        self.test_file = None
-        self.input_file = None
         self.results = None
 
     def evaluated(self, test_path: str, input_path: str, betta_value: float) -> None:
-        print(f'Start the evaluation of the file `{os.path.basename(input_path)}`')
-        # read the input files
-        self.test_file = open_file_plain(test_path, extract= ';')
-        self.input_file = open_file_plain(input_path, extract='')
-
-        # Calculated the confusion_matrix values
-        self.calculated_confusion_matrix()
-
-        # Once calculated the confusion matrix values, we can start calculating the precision, recall and f-measure
-        precision = self.calculated_precision()
-        recall = self.calculated_recall()
-
-        f_measure = calculated_f(betta=betta_value, precision=precision, recall=recall)
-
-        self.results = f"""Results of the evaluation
-        Precision:`{precision}`
-        Recall: `{recall}`
-        F_measure `{f_measure}`"""
-
-        print(self.results)
-
+        raise NotImplementedError('Esta clase no implenta este método')
 
     def calculated_confusion_matrix(self):
-        print('Calculated the confusion matrix')
-
-        for _ in self.input_file:
-            if _ in self.test_file:
-                self.confusion_matrix["True_Positive"] += 1
-            else:
-                self.confusion_matrix["False_Positive"] += 1
-
-        for _ in self.test_file:
-            if _ not in self.input_file:
-                self.confusion_matrix["True_Negative"] += 1
+        raise NotImplementedError('Está clase no implementa esté método')
 
     def calculated_precision(self) -> float:
         print('Calculated the precision measure')
@@ -102,9 +70,52 @@ class Evaluator:
         with open(output_path, 'w') as file:
             file.write(self.results)
 
-    #TODO: Create a news classes for another type of evaluation with a labeled data for NER
+
 class EvaluatorPlain(Evaluator):
     def __init__(self):
         super().__init__()
         self.input_file = None
         self.test_file = None
+
+    def evaluated(self, test_path: str, input_path: str, betta_value: float) -> None:
+        print(f'Start the evaluation of the file `{os.path.basename(input_path)}`')
+        # read the input files
+        self.test_file = open_file_plain(test_path, extract=';')
+        self.input_file = open_file_plain(input_path, extract='')
+
+        # Calculated the confusion_matrix values
+        self.calculated_confusion_matrix()
+
+        # Once calculated the confusion matrix values, we can start calculating the precision, recall and f-measure
+        precision = self.calculated_precision()
+        recall = self.calculated_recall()
+
+        f_measure = calculated_f(betta=betta_value, precision=precision, recall=recall)
+
+        self.results = f"""Results of the evaluation
+                Precision:`{precision}`
+                Recall: `{recall}`
+                F_measure `{f_measure}`"""
+
+        print(self.results)
+
+    def calculated_confusion_matrix(self):
+        print('Calculated the confusion matrix')
+
+        for _ in self.input_file:
+            if _ in self.test_file:
+                self.confusion_matrix["True_Positive"] += 1
+            else:
+                self.confusion_matrix["False_Positive"] += 1
+
+        for _ in self.test_file:
+            if _ not in self.input_file:
+                self.confusion_matrix["True_Negative"] += 1
+
+
+#TODO: Create a news classes for another type of evaluation with a labeled data for NER
+class EvaluatorLabelled(Evaluator):
+    def __init__(self):
+        super().__init__()
+        self.valid_file = None
+        self.fail_file = None
