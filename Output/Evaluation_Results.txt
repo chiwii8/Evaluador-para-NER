@@ -1,0 +1,4 @@
+Results of the evaluation
+        Precision:`0.04809397163120567`
+        Recall: `0.9863636363636363`
+        F_measure `0.09171597633136094`
