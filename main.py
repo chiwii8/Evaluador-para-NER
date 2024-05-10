@@ -1,10 +1,13 @@
-# This is a script that evaluated the results between an input_file and a test_fil
+# This is a script that evaluated the results between an input_file and a test_file
+# Added the evaluation a valid_file and fail_file labelled  with only two labels
+
+# TODO: update the dockerfile and the min_req.txt
 # Import classes
 
 from typing import List
 import argparse
 import os
-from Evaluation import Evaluator
+from Evaluation import EvaluatorPlain,EvaluatorLabelled
 
 seqEval = ['Precision', 'Recall', 'F-measure']
 typeOfFile=['plain','labelled']
@@ -26,6 +29,8 @@ def main():
                         help='Dirección del fichero etiquetado con los resultados recuperados')
     parser.add_argument('-f','--fail_file',required=False, type=str,
                         help='Dirección del fichero etiquetado con los resultados no recuperados')
+    parser.add_argument('-l','--label',required=False, type=str, default='0',
+                        help='Establece la etiqueta que quieres evaluar como no relevantes')
     parser.add_argument('-o', '--output_file', required=False, type=str, default='./Output/Evaluation_Results.txt',
                         help='Fichero de salida con los resultados obtenidos')
     parser.add_argument('-b', '--betta_value', required=False, type=float, default=1,
@@ -42,6 +47,7 @@ def main():
     # Ficheros para dataset etiquetado
     valid_file: str = args.valid_file
     fail_file: str = args.fail_file
+    label: str = args.label
 
     # Datos comunes
     output_file: str = args.output_file
@@ -53,12 +59,14 @@ def main():
 
     if type_of_file=='plain':
         assert is_file(test_file) & is_file(input_file), 'Uno de los ficheros es inválido'
-        evaluator = Evaluator()
+        evaluator = EvaluatorPlain()
         evaluator.evaluated(test_path=test_file, input_path=input_file, betta_value=betta_value)
         evaluator.save(output_path=output_file)
     else:
         assert is_file(valid_file) & is_file(fail_file), 'Uno de los ficheros es inválido'
-
+        evaluator = EvaluatorLabelled()
+        evaluator.evaluated(valid_path=valid_file,fail_path=fail_file, betta_value=betta_value,label=label)
+        evaluator.save(output_path=output_file)
 
 
 
