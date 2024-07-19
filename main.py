@@ -35,13 +35,13 @@ def main():
                         help='Dirección del fichero de evaluación plano')
     parser.add_argument('-i', '--input_file', required=False, type=str,
                         help='Dirección del fichero a evaluar plano')
-    parser.add_argument('-v', '--valid_file', required=False, type=str, default='./Eval_files/valid_file.csv',
+    parser.add_argument('-v', '--valid_file', required=False, type=str, default='Eval_files/valid_file.csv',
                         help='Dirección del fichero etiquetado con los resultados recuperados')
-    parser.add_argument('-f', '--fail_file', required=False, type=str, default='./Eval_files/fail_file.csv',
+    parser.add_argument('-f', '--fail_file', required=False, type=str, default='Eval_files/fail_file.csv',
                         help='Dirección del fichero etiquetado con los resultados no recuperados')
     parser.add_argument('-l', '--label', required=False, type=str, default='0',
                         help='Establece la etiqueta que quieres evaluar como no relevante')
-    parser.add_argument('-o', '--output_file', required=False, type=str, default='./Output/Evaluation_Results.txt',
+    parser.add_argument('-o', '--output_file', required=False, type=str, default='Output/Evaluation_Results.txt',
                         help='Fichero de salida con los resultados obtenidos')
     parser.add_argument('-b', '--betta_value', required=False, type=float, default=1,
                         help='Valor de betta para el cálculo de la medida F.')
