@@ -22,7 +22,7 @@ def open_file_plain(path_file: str, extract='') -> List[str]:
     return data
 
 
-def open_file_labelled(path_file:str) -> pd.DataFrame:
+def open_file_labelled(path_file: str) -> pd.DataFrame:
     csv_file = pd.read_csv(path_file, sep=',', encoding='utf-8')
     return csv_file
 
@@ -30,9 +30,9 @@ def open_file_labelled(path_file:str) -> pd.DataFrame:
 def calculated_f(betta: float, precision: float, recall: float) -> float:
     print(f'Calculated the f measure with betta value `{betta}`')
     betta_pow = pow(betta, 2)
-    f_measure_top = (betta_pow + 1)* precision* recall
+    f_measure_top = (betta_pow + 1) * precision * recall
     f_measure_bot = (betta_pow * precision) + recall
-    f_measure = f_measure_top/f_measure_bot
+    f_measure = f_measure_top / f_measure_bot
     if f_measure < 0:
         f_measure = 0
 
@@ -105,6 +105,27 @@ class EvaluatorPlainBinary(Evaluator):
 
         print(self.results)
 
+    def evaluated_parametric(self, test_file: List[str], input_file: List[str], betta_value: float):
+        print(f'Start the evaluation of the files ')
+        # read the input files
+        self.test_file = test_file
+        self.input_file = input_file
+
+        # Calculated the confusion_matrix values
+        self.calculated_confusion_matrix()
+
+        # Once calculated the confusion matrix values, we can start calculating the precision, recall and f-measure
+        precision = self.calculated_precision()
+        recall = self.calculated_recall()
+
+        # Finally save the results in a parameter and return it
+        results = self.confusion_matrix
+        results['precision'] = precision
+        results['recall'] = recall
+        results['f_measure'] = calculated_f(betta=betta_value, precision=precision, recall=recall)
+
+        return results
+
     def calculated_confusion_matrix(self):
         print('Calculated the confusion matrix')
 
@@ -152,6 +173,27 @@ class EvaluatorLabelledBinary(Evaluator):
                         FN: `{self.confusion_matrix['False_Negative']}`"""
 
         print(self.results)
+
+    def evaluated_parametric(self, valid_file: pd.DataFrame, fail_file: pd.DataFrame, betta_value: float):
+        print(f'Start the evaluation of the files.')
+        # read the input files
+        self.valid_file = valid_file
+        self.fail_file = fail_file
+
+        # Calculated the confusion_matrix values
+        self.calculated_confusion_matrix()
+
+        # Once calculated the confusion matrix values, we can start calculating the precision, recall and f-measure
+        precision = self.calculated_precision()
+        recall = self.calculated_recall()
+
+        # Finally save the results in a parameter and return it
+        results = self.confusion_matrix
+        results['precision'] = precision
+        results['recall'] = recall
+        results['f_measure'] = calculated_f(betta=betta_value, precision=precision, recall=recall)
+
+        return results
 
     def calculated_confusion_matrix(self):
         print('Calculated the confusion matrix')
