@@ -5,9 +5,9 @@ predictions made for a Binary NER model.
 
 ## Prerequisitos
 
-Make
-[Docker](https://docs.docker.com/engine/install/ubuntu/)
-[Docker Compose](https://docs.docker.com/compose/install/)
+  *  Make
+  *  [Docker](https://docs.docker.com/engine/install/ubuntu/)
+  *  [Docker Compose](https://docs.docker.com/compose/install/) 
 
 ## Docker Setup
 
@@ -37,6 +37,7 @@ project_folder
                    | - fail_file.csv
        | - Output/
 </code>
+</pre>
 
 
 With the previous structure for our script process we can run the container in windows with the following command from the project directory:

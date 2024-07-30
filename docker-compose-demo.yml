@@ -1,0 +1,14 @@
+version: '3.11'
+services:
+  app:
+    container_name: demo-evaluator-streamlit
+    build:
+      context: .
+      dockerfile: Dockerfile-streamlit
+    restart: unless-stopped
+    ports:
+      - '8002:8501'
+    environment:
+      - LANG=es
+
+

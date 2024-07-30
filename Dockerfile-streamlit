@@ -1,0 +1,20 @@
+FROM python:3.11
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN mkdir /home/evaluator
+
+WORKDIR /home/evaluator
+
+RUN apt-get update
+
+COPY min_demo_req.txt /home/evaluator/
+
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r min_demo_req.txt
+
+
+COPY Evaluation.py demo.py /home/evaluator/
+
+ENTRYPOINT ["streamlit","run", "demo.py", "--server.address=0.0.0.0", "server.port=8501"]
